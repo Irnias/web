@@ -1,0 +1,18 @@
+body{
+  padding-top: 50px;
+}
+
+td{
+  white-space: -moz-pre-wrap; /* Firefox */
+  white-space: -o-pre-wrap; /* Opera */
+  white-space: pre-wrap; /* Chrome */
+  word-wrap: break-word; /* IE */
+}
+td.whatever
+{
+    max-width: 15px;
+}
+
+td {
+    vertical-align: bottom;
+}
