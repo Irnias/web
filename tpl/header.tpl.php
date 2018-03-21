@@ -93,7 +93,7 @@ log_ptt();
 ?>
 
 			<div class="navbar-header">
-				<a class="navbar-brand" href="#">Case Traker</a>
+				<a class="navbar-brand" href="index.php">Performance Tracking Tool</a>
 			</div>
 <?php
 }

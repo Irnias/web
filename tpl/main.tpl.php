@@ -7,7 +7,7 @@ if(isset($_GET['taskOption']))
   $teamoption = $_GET['taskOption'];
 }
 else {
-$teamoption = "MIS";
+$teamoption = $_SESSION['team'];
 }
 
 //QUERYS
@@ -109,6 +109,9 @@ if(($result201=odbc_exec($con,$sqlt201))=== false )		//Run query and validate.
   $COnday = $row['resultado'];
 }
 //Page information
+?>
+<div class="container-fluid"> Welcome <?php echo $_SESSION['aname']; ?></div>
+<?php
  echo "<center>";
 	echo "Total Open Cases: ".$cantopen. " <a href=\"cases/ocases.php\">More Info</a> | ";
   echo "Total Close Cases: ".$cantclose." | ";

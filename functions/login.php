@@ -38,13 +38,17 @@ if(isset($_POST['submit']))
 				$_SESSION['webid']=1;
 
  //GET Name instead user.
-   $sql2= "select ACN_Users.[Analyst] from ACN_Users where UserID = '".$userID."'";
+   $sql2= "select * from ACN_Users where UserID = '".$userID."'";
    if(($result=odbc_exec($con,$sql2))=== false )		//Run query and validate.
      die("Query error." .odbc_errormsg($sql2));		//Run query and validate.
    {
 		 $row = odbc_fetch_array($result);
-     $userID = $row['Analyst'];
-		 $_SESSION['logedas']=$userID;
+		 $analystName = $row['AnalystName']; // Get Analyst Name from database
+     $userID = $row['Analyst']; // Get Analyst ID from database
+		 $analystTeam = $row['AnalystTeam']; // Get Analyst Team from database
+		 $_SESSION['logedas']=$userID; //Assign UserID global variable
+		 $_SESSION['aname']=$analystName; //Assign Analist Name global variable
+		 $_SESSION['team']=$analystTeam; //Assign Analist Team global variable
    }
    odbc_free_result($result);
    odbc_close($con);
@@ -60,6 +64,6 @@ if(isset($_POST['submit']))
 else
 {
 	echo "Invalid request, please log in first.";
-	header("refresh:0;url=index.php");
+	header("refresh:1;url=index.php");
 }
 ?>
