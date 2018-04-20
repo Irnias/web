@@ -16,10 +16,40 @@ else {
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="css\bootstrap.min.css">
 	<link rel="stylesheet" href="css\style.css">
-    <title>Performance Tracking Tool Online</title>
+
+
+
+	<!--ESTAS  LIBRERIAS LA USA PARA LOS GRAFICOS
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+	<script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+	<script src="https://www.koolchart.com/demo/LicenseKey/codepen/KoolChartLicense.js"></script>
+	<script src="https://www.koolchart.com/demo/KoolChart/JS/KoolIntegration.js"></script>
+	<link rel="stylesheet" href="https://www.koolchart.com/demo/KoolChart/Assets/Css/KoolChart.css"/>
+	<link rel="stylesheet" href="https://www.koolchart.com/demo/Samples/Web/sample.css"/>
+-->
+
+
+	<!--LAS SIGUIENTES TRES LINEAS CARGAN ESTILOS QUE SE USAN PARA EL FORMULARIO DE LOG IN-->
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+
+
+<title>Performance Tracking Tool Online</title>
 
 </head>
-<body>
+<!--<body class="loginpagebackimage">-->
+<?php
+if (isset($_SESSION['log'])) {
+?>
+<body class="loginpagebackimage">
+<?php
+} else {
+?>
+<body class="loginpagebackimage">
+<?php
+}
+?>
 	<nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
   <div class="container-fluid">
 <?php
@@ -102,5 +132,3 @@ log_ptt();
 ?>
   </div>
 </nav>
-
-<HR>

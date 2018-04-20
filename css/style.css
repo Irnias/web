@@ -16,3 +16,28 @@ td.whatever
 td {
     vertical-align: bottom;
 }
+
+.loginpagebackimage{
+backfround-color: black;
+  	background-image: url("../images/optima.jpg");
+      /*Que ocupe toda la paginat */
+      height: 100%;
+      /* Posicionamiento de la imagen en la pantalla*/
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+}
+
+.loingpageformphoto{
+  display: flex;
+    align-items: center;
+}
+
+.userviewfooter{
+  background-color: #f18973;
+  position:fixed;
+  left:0px;
+  bottom:0px;
+  height:30px;
+  width:100%;
+}
