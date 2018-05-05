@@ -4,7 +4,7 @@
 	if(($con=odbc_connect("PTTO","",""))=== false )	//Database connect.
 		die("connection error");						//Database connect.
 
-	$sql="select * from Tickets";						//Sql query.
+	$sql="select * from webTickets";						//Sql query.
 
 	if(($result=odbc_exec($con,$sql))=== false )		//Run query and validate.
 		die("Query error." .odbc_errormsg($sql));		//Run query and validate.

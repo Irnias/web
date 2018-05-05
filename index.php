@@ -24,7 +24,7 @@ include ('tpl\ocases.tpl.php');
 	include ('tpl\myocases.tpl.php');
 			break;
 default:
-	echo "a";
+	echo "";
 		break;
 }
 

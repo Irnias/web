@@ -11,212 +11,192 @@ $teamoption = $_SESSION['team'];
 }
 
 //QUERYS
-//OPEN CASES TOTAL
-$sql1= "select count('Open') as resultado from Tickets where szStatus = 'open'";
-if(($result=odbc_exec($con,$sql1))=== false )		//Run query and validate.
-  die("Query error." .odbc_errormsg($sql2));		//Run query and validate.
+//Variables:
+$selectWhat = "count('szCID') as resultado";
+$where_cond = "szTicketTable = 'Null' ";
+if(isset($_SSESION['team']))
+{
+  //Busca nivel de la jerarquia
+  $hierarchysearchquery = "select intLevel from Teams where szTeam = '$teamoption'";
+  if(($result=odbc_exec($con,$hierarchysearchquery))=== false )		//Run query and validate.
+    die("Query error." .odbc_errormsg($hierarchysearchquery));		//Run query and validate.
+  {
+    $row = odbc_fetch_array($result);
+    $teamlist = $row['intLevel'];
+  }
+  $where_cond = $where_cond . " and szTeam in (select szTeam from Teams where $teamlist = '$teamoption' )";
+}
+$fuulquery= "select $selectWhat from TicketOL where $where_cond";
+if(($result=odbc_exec($con,$fuulquery))=== false )		//Run query and validate.
+  die("Query error." .odbc_errormsg($fuulquery));		//Run query and validate.
 {
   $row = odbc_fetch_array($result);
-  $cantopen = $row['resultado'];
+  $cantopunnasigned = $row['resultado'];
+
+  //Query total:
+  $querytotalOL = "select count(szCID) as resultado from (Select distinct szCID from TicketOL)";
+  if(($result=odbc_exec($con,$querytotalOL))=== false )		//Run query and validate.
+    die("Query error." .odbc_errormsg($querytotalOL));		//Run query and validate.
+  {
+    $row = odbc_fetch_array($result);
+    $CantOL = $row['resultado'];
+  }
+
+
+  $cantopunnasigned = ($cantopunnasigned / $CantOL) * 100;
+  $cantAssigned = 100 - $cantopunnasigned;
 }
-//CLOSED CASES TOTAL
-$sql2= "select count('Closed') as resultado from Tickets where szStatus = 'Closed'";
-if(($result2=odbc_exec($con,$sql2))=== false )		//Run query and validate.
-  die("Query error." .odbc_errormsg($sql2));		//Run query and validate.
-{
-  $row = odbc_fetch_array($result2);
-  $cantclose = $row['resultado'];
-}
-//MyOpen CASES
-$sql3= "select count('Open') as resultado from Tickets where szStatus = 'Open' and szResponsible = '".$_SESSION['logedas']."'";
-if(($result3=odbc_exec($con,$sql3))=== false )		//Run query and validate.
-  die("Query error." .odbc_errormsg($sql3));		//Run query and validate.
-{
-  $row = odbc_fetch_array($result3);
-  $mycantopen = $row['resultado'];
-}
-//OPEN ASSIGNMENTS MAPPING OAMAP = $oamap
-$sql4= "select count('Open') as resultado from Tickets where szStatus = 'open' and szTeam = 'MAP' ";
-if(($result4=odbc_exec($con,$sql4))=== false )		//Run query and validate.
-  die("Query error." .odbc_errormsg($sql4));		//Run query and validate.
-{
-  $row = odbc_fetch_array($result4);
-  $oamap = $row['resultado'];
-}
-//OPEN ASSIGNMENTS GT1 OAGT1 = $oagt1
-$sql5= "select count('Open') as resultado from Tickets where szStatus = 'open' and szTeam = 'GT1' ";
-if(($result5=odbc_exec($con,$sql5))=== false )		//Run query and validate.
-  die("Query error." .odbc_errormsg($sql5));		//Run query and validate.
-{
-  $row = odbc_fetch_array($result5);
-  $oagt1 = $row['resultado'];
-}
-//OPEN ASSIGNMENTS BPC OABPC = $oabpc
-$sql6= "select count('Open') as resultado from Tickets where szStatus = 'open' and szTeam = 'BPC' ";
-if(($result6=odbc_exec($con,$sql6))=== false )		//Run query and validate.
-  die("Query error." .odbc_errormsg($sql6));		//Run query and validate.
-{
-  $row = odbc_fetch_array($result6);
-  $oabpc = $row['resultado'];
-}
-//OPEN ASSIGNMENTS BSI OABSI = $oabsi
-$sql7= "select count('Open') as resultado from Tickets where szStatus = 'open' and szTeam = 'BSI' ";
-if(($result7=odbc_exec($con,$sql7))=== false )		//Run query and validate.
-  die("Query error." .odbc_errormsg($sql7));		//Run query and validate.
-{
-  $row = odbc_fetch_array($result7);
-  $oabsi = $row['resultado'];
-}
-//CLOSED ASSIGNMENTS MAPPING CAMAP = $camap
-$sql8= "select count('Closed') as resultado from Tickets where szStatus = 'Close' and szTeam = 'MAP' ";
-if(($result8=odbc_exec($con,$sql8))=== false )		//Run query and validate.
-  die("Query error." .odbc_errormsg($sql8));		//Run query and validate.
-{
-  $row = odbc_fetch_array($result8);
-  $camap = $row['resultado'];
-}
-//CLOSED ASSIGNMENTS GT1 OAGT1 = $oagt1
-$sql9= "select count('Closed') as resultado from Tickets where szStatus = 'Close' and szTeam = 'GT1' ";
-if(($result9=odbc_exec($con,$sql9))=== false )		//Run query and validate.
-  die("Query error." .odbc_errormsg($sql9));		//Run query and validate.
-{
-  $row = odbc_fetch_array($result9);
-  $cagt1 = $row['resultado'];
-}
-//CLOSED ASSIGNMENTS BPC OABPC = $oabpc
-$sql10= "select count('Closed') as resultado from Tickets where szStatus = 'Close' and szTeam = 'BPC' ";
-if(($result10=odbc_exec($con,$sql10))=== false )		//Run query and validate.
-  die("Query error." .odbc_errormsg($sql10));		//Run query and validate.
-{
-  $row = odbc_fetch_array($result10);
-  $cabpc = $row['resultado'];
-}
-//CLOSED ASSIGNMENTS BSI OABSI = $oabsi
-$sql10= "select count('Closed') as resultado from Tickets where szStatus = 'Close' and szTeam = 'BSI' ";
-if(($result10=odbc_exec($con,$sql10))=== false )		//Run query and validate.
-  die("Query error." .odbc_errormsg($sql10));		//Run query and validate.
-{
-  $row = odbc_fetch_array($result10);
-  $cabsi = $row['resultado'];
-}
-//Querys second Table
-//category On-day $COnday
-$sqlt201= "select count('open') as resultado from Tickets where szStatus = 'open' and szTeam = '$teamoption' ";
-if(($result201=odbc_exec($con,$sqlt201))=== false )		//Run query and validate.
-  die("Query error." .odbc_errormsg($sqlt201));		//Run query and validate.
-{
-  $row = odbc_fetch_array($result201);
-  $COnday = $row['resultado'];
-}
-//Page information
+/////*****NEW QUERYS *****/////
 ?>
-<div class="container-fluid"> Welcome <?php echo $_SESSION['aname']; ?></div>
-<?php
- echo "<center>";
-	echo "Total Open Cases: ".$cantopen. " <a href=\"cases/ocases.php\">More Info</a> | ";
-  echo "Total Close Cases: ".$cantclose." | ";
-	echo "You have ".$mycantopen." Open Case/s - <a href=\"cases/myocases.php\">More Info</a><br>";
-  echo "</center> <br> <br>";
-?>
+
+<div class="container-fluid"> <br> <br> Welcome <?php echo $_SESSION['aname']; ?></div>
 <!-- Tables! -->
 <div class="container-fluid">
-  <div class="container col-xs-6">
-    <table class="table table-bordered">
-      <tr>
-        <th colspan="4"> <center>Cases / Assignments</center> </th>
-      </tr>
-      <tr>
-        <th>Area</th><th>Open Assignments</th><th>Closed Assignments</th><th>Total</th>
-      </tr>
-      <tr>
-        <th>Mapping</th><td><?php echo $oamap; ?></td><td><?php echo $camap; ?></td><td><?php echo $oamap+$camap; ?></td>
-      </tr>
-      <tr>
-        <th>GTOne</th><td><?php echo $oagt1; ?></td><td><?php echo $cagt1; ?></td><td><?php echo $oagt1+$cagt1; ?></td>
-      </tr>
-      <tr>
-        <th>BPC</th><td><?php echo $oabpc; ?></td><td><?php echo $cabpc; ?></td><td><?php echo $oabpc+$cabpc; ?></td>
-      </tr>
-      <tr>
-        <th>BSI</th><td><?php echo $oabsi; ?></td><td><?php echo $cabsi; ?></td><td><?php echo $oabsi+$cabsi; ?></td>
-      </tr>
-      <tr>
-        <th>Totals</th>
-        <th><?php echo $oatotal = $oamap + $oagt1 + $oabpc + $oabsi; ?></th>
-        <th><?php echo $catotal =$camap+$cagt1+$cabpc+$cabsi; ?></th>
-        <th><?php echo $oatotal+$catotal; ?></th>
-      </tr>
-    </table>
+  <div class="container col-xs-2">
+    <center> Columna 1</center>
   </div>
   <div class="clearfix visible-xs-block"></div>
-  <div class="container col-xs-6">
-    <table class="table table-bordered">
-<tr>
-  <th>Teams</th><th colspan="4"> <center>Delays</center> </th>
-</tr>
-<tr>
-  <th><form class="form-inline">
-    <select class="form-control" action ="" method="get" name="taskOption">
-      <option value="MIS">MIS</option>
-      <option value="MAP">MAP</option>
-      <option value="BSI">BSI</option>
-      <option value="BPC">BPC</option>
-      <option value="GT1">GT1</option>
-    </select><input type="submit" class="btn" value="Refresh!" > </form>
-  </th>
-  <th colspan="2"><center>Quantity</center></th>
-  <th colspan="2"><center>%</center></th>
-</tr>
-<tr>
-  <th>Categories</th>
-  <th>Opened</th>
-  <th>Closed</th>
-  <th>Opened</th>
-  <th>Closed</th>
-</tr>
-<tr>
-  <th>On-Day</th>
-  <td><?php echo $oamap; ?></td>
-  <td><?php echo $camap; ?></td>
-  <td><?php echo $oamap + $camap; ?></td>
-  <td><?php echo $oamap + $camap; ?></td>
-</tr>
-<tr>
-  <th>A (<=2)</th>
-  <td><?php echo $oagt1; ?></td>
-  <td><?php echo $cagt1; ?></td>
-  <td><?php echo $oagt1 + $cagt1; ?></td>
-  <td><?php echo $oamap + $camap; ?></td>
-</tr>
-<tr>
-  <th>B (>2<=5)</th>
-  <td><?php echo $oabpc; ?></td>
-  <td><?php echo $cabpc; ?></td>
-  <td><?php echo $oabpc + $cabpc; ?></td>
-  <td><?php echo $oamap + $camap; ?></td>
-</tr>
-<tr>
-  <th>c (>5<=10)</th>
-  <td><?php echo $oabsi; ?></td>
-  <td><?php echo $cabsi; ?></td>
-  <td><?php echo $oabsi+$cabsi; ?></td>
-  <td><?php echo $oamap+$camap; ?></td>
-</tr>
-<tr>
-  <th>D (>10)</th>
-  <td><?php echo $oatotal = $oamap + $oagt1 + $oabpc + $oabsi; ?> </td>
-  <td><?php echo $catotal = $camap + $cagt1 + $cabpc + $cabsi; ?></td>
-  <td><?php echo $oatotal + $catotal; ?></td>
-  <td><?php echo $oamap + $camap; ?></td>
-</tr>
- <tr>
-  <th>Totals</th>
-  <th><?php echo $oatotal = $oamap + $oagt1 + $oabpc + $oabsi; ?> </th>
-  <th><?php echo $catotal = $camap + $cagt1 + $cabpc + $cabsi; ?> </th>
-  <th><?php echo $oatotal + $catotal; ?> </th>
-  <th><?php echo $oamap + $camap; ?> </th>
-</tr>
-    </table>
+  <div class="container col-xs-4">
+    <center> Columna 2</center>
+    <div id="chartHolder" style="width:100%; height:500px;"></div>
+
+<script>
+var chartVars = "KoolOnLoadCallFunction=chartReadyHandler";
+
+KoolChart.create("chart1", "chartHolder", chartVars, "100%", "100%");
+
+function chartReadyHandler(id) {
+  document.getElementById(id).setLayout(layoutStr);
+  document.getElementById(id).setData(chartData);
+}
+
+var layoutStr =
+  '<KoolChart>'
+   +'<Gauge innerRatio="0.5" nameField="name" valueField="value" backgroundColors="[#f0f0f0]" foregroundColors="[#5587a2,#20cbc2,#f6a54c]" minimum="0" maximum="100" startAngle="-90" minimumAngle="0" maximumAngle="270" color="#ffffff" fontSize="20" fontWeight="bold" labelYOffset="-4">'
+    +'<backgroundElements>'
+     +'<Box width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">'
+      +'<SubLegend direction="vertical" fontSize="13" color="#666666" borderStyle="none">'
+       +'<LegendItem label=" <?php echo "Unnasigned " ?> ">'
+        +'<fill>'
+         +'<SolidColor color="#5587a2"/>'
+        +'</fill>'
+       +'</LegendItem>'
+       +'<LegendItem label="Assigned">'
+        +'<fill>'
+         +'<SolidColor color="#20cbc2"/>'
+        +'</fill>'
+       +'</LegendItem>'
+       +'<LegendItem label="Delayed">'
+        +'<fill>'
+         +'<SolidColor color="#f6a54c"/>'
+        +'</fill>'
+       +'</LegendItem>'
+      +'</SubLegend>'
+     +'</Box>'
+    +'</backgroundElements>'
+   +'</Gauge>'
+  +'</KoolChart>';
+
+var chartData =
+  [{"name" : "Unnasigne %", "value" : <?php echo $cantopunnasigned ?>},
+  {"name" : "Assigned", "value" : <?php echo $cantAssigned ?>},
+  {"name" : "Delayed", "value" : 82}];
+</script>
   </div>
+  <div class="clearfix visible-xs-block"></div>
+    <div class="container col-xs-6">
+      <div role ="tabpanel">
+
+        <ul class="nav nav-tabs" role="tablist">
+            <li role"presentation" class="active"><a href="#tab1" aria-controls="tab1" data-toggle="tab" role="tab">Delayed</a></li>
+            <li role"presentation"><a href="#tab2" aria-controls="tab2" data-toggle="tab" role="tab">Unssigned</a></li>
+            <li role"presentation"><a href="#tab3" aria-controls="tab3" data-toggle="tab" role="tab">In progress</a></li>
+            <li role"presentation"><a href="#tab4" aria-controls="tab4" data-toggle="tab" role="tab">Completed</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="tab1">
+                  <?php
+    $date = date('Y-m-d h:i:s', time());
+    $querytablaOL = "select * from TicketOL";
+    if(($result=odbc_exec($con,$querytablaOL))=== false )		//Run query and validate.
+      die("Query error." .odbc_errormsg($querytablaOL));		//Run query and validate.
+
+      echo"<div class=\"container\">
+
+    </div>";
+    echo "<div class=\"container-fluid\"><table class=\"table primary table-striped table-bordered table-hover\"><tr class=\"danger\"><th>Subject</th><th>From</th><th>Recived</th><th class=\"text-nowrap\">Time Passed</th></tr> </div>";
+    while($row = odbc_fetch_array($result))
+    {
+      $row = odbc_fetch_array($result);
+      $tk = $row['mnOLTicket'];
+            echo "<a href=\"index.php\"><tr><td><a href=\"search.php?OL=$tk\">" .$row['szSubject']."</a></td><td>".$row['szFROM']."</td><td>".$row['szRecived']."</td><td >".$date."</td></tr></a>";
+    }
+        echo "</table></div>";
+    ?>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="tab2">
+              <?php
+$date = date('Y-m-d h:i:s', time());
+$querytablaOL = "select * from TicketOL";
+if(($result=odbc_exec($con,$querytablaOL))=== false )		//Run query and validate.
+  die("Query error." .odbc_errormsg($querytablaOL));		//Run query and validate.
+
+  echo"<div class=\"container\">
+
+</div>";
+echo "<div class=\"container-fluid\"><table class=\"table primary table-striped table-bordered table-hover\"><tr class=\"info\"><th>Subject</th><th>From</th><th>Recived</th><th class=\"text-nowrap\">Time Passed</th></tr> </div>";
+while($row = odbc_fetch_array($result))
+{
+  $row = odbc_fetch_array($result);
+  $tk = $row['mnOLTicket'];
+        echo "<a href=\"index.php\"><tr><td><a href=\"search.php?OL=$tk\">" .$row['szSubject']."</a></td><td>".$row['szFROM']."</td><td>".$row['szRecived']."</td><td >"."1 WD, 14hs"."</td></tr></a>";
+}
+    echo "</table></div>";
+?>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="tab3">
+              <?php
+$date = date('Y-m-d h:i:s', time());
+$querytablaOL = "select * from TicketOL";
+if(($result=odbc_exec($con,$querytablaOL))=== false )		//Run query and validate.
+  die("Query error." .odbc_errormsg($querytablaOL));		//Run query and validate.
+
+  echo"<div class=\"container\">
+
+</div>";
+echo "<div class=\"container-fluid\"><table class=\"table primary table-striped table-bordered table-hover\"><tr class=\"info\"><th>Subject</th><th>From</th><th>Recived</th><th class=\"text-nowrap\">Time Passed</th></tr> </div>";
+while($row = odbc_fetch_array($result))
+{
+  $row = odbc_fetch_array($result);
+  $tk = $row['mnOLTicket'];
+        echo "<a href=\"index.php\"><tr><td><a href=\"search.php?OL=$tk\">" .$row['szSubject']."</a></td><td>".$row['szFROM']."</td><td>".$row['szRecived']."</td><td >".$date."</td></tr></a>";
+}
+    echo "</table></div>";
+?>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="tab4">
+              <?php
+$date = date('Y-m-d h:i:s', time());
+$querytablaOL = "select * from TicketOL";
+if(($result=odbc_exec($con,$querytablaOL))=== false )		//Run query and validate.
+  die("Query error." .odbc_errormsg($querytablaOL));		//Run query and validate.
+
+  echo"<div class=\"container\">
+
+</div>";
+echo "<div class=\"container-fluid\"><table class=\"table primary table-striped table-bordered table-hover\"><tr class=\"success\"><th>Subject</th><th>From</th><th>Recived</th><th class=\"text-nowrap\">Time Passed</th></tr> </div>";
+while($row = odbc_fetch_array($result))
+{
+  $row = odbc_fetch_array($result);
+  $tk = $row['mnOLTicket'];
+        echo "<a href=\"index.php\"><tr><td><a href=\"search.php?OL=$tk\">" .$row['szSubject']."</a></td><td>".$row['szFROM']."</td><td>".$row['szRecived']."</td><td >".$date."</td></tr></a>";
+}
+    echo "</table></div>";
+?>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
+<br><br><br><br><br>

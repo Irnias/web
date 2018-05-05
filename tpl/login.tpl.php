@@ -2,13 +2,16 @@
 	<div class="col-sm-4"></div>
 
 <!--FORMULARIO-->
-<!--ACORDARSE DE PASAR TODA LA PAGINA ACTUAL MAS LA CLASE CREADA PARA EL BACK BODY DE LA PAGINA PRINCIPAL-->
-
 	<div class="col-sm-4" style="background-color: rgba(0,0,0,0.4);">
 		<form class ="form-group"  action ="functions\login.php" method ="POST">
 			<h2 class="text-center"><font color="white"> Sign in</font></h2>
 			<div style ="text-align:center;">
-				<img src="images/canguro.jpg" class="img-circle" alt="bio-image" width="200" height="200">
+				<?php if (isset($_SESSION['jpg'])) { ?>
+				<img src="images/"<?php  echo $_SESSION['jpg']; ?> .jpg" class="img-circle" alt="bio-image" width="200" height="200">
+			<?php } else
+			{ ?>
+				<img src="images/default.png" class="img-circle" style="background-color: #FFFFFF;"  alt="bio-image" width="200" height="200">
+			<?php } ?>
 			</div>
 	</br>
 	<!--USER NAME INPUT-->

@@ -17,36 +17,28 @@ else {
 	<link rel="stylesheet" href="css\bootstrap.min.css">
 	<link rel="stylesheet" href="css\style.css">
 
-
-
-	<!--ESTAS  LIBRERIAS LA USA PARA LOS GRAFICOS
+	<!--ESTAS  LIBRERIAS LA USA PARA LOS GRAFICOS-->
 	<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
-	<script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
-	<script src="https://www.koolchart.com/demo/LicenseKey/codepen/KoolChartLicense.js"></script>
-	<script src="https://www.koolchart.com/demo/KoolChart/JS/KoolIntegration.js"></script>
-	<link rel="stylesheet" href="https://www.koolchart.com/demo/KoolChart/Assets/Css/KoolChart.css"/>
-	<link rel="stylesheet" href="https://www.koolchart.com/demo/Samples/Web/sample.css"/>
--->
+	<script src="js/chartist.min.js"></script>
+	<script src="js/KoolChartLicense.js"></script>
+	<script src="js/KoolIntegration.js"></script>
+	<link rel="stylesheet" href="css/KoolChart.css"/>
+	<!--<link rel="stylesheet" href="https://www.koolchart.com/demo/Samples/Web/sample.css"/> -->
 
-
-	<!--LAS SIGUIENTES TRES LINEAS CARGAN ESTILOS QUE SE USAN PARA EL FORMULARIO DE LOG IN-->
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
-
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery-1.11.1.min.js"></script>
 
 <title>Performance Tracking Tool Online</title>
 
 </head>
-<!--<body class="loginpagebackimage">-->
 <?php
-if (isset($_SESSION['log'])) {
+if (isset($_SESSION['login'])) {
 ?>
-<body class="loginpagebackimage">
+<body style="background: ">
 <?php
 } else {
 ?>
-<body class="loginpagebackimage">
+<body style="background-image: url(images/wood.jpg);height: 100%;background-position: center;background-repeat: repeat;background-size: cover;">
 <?php
 }
 ?>

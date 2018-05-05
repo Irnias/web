@@ -2,6 +2,17 @@ body{
   padding-top: 50px;
 }
 
+body.loginpagebackimage{
+      background-color: black;
+  	  background-image: url("../images/optima.jpg");
+      /*Que ocupe toda la paginat */
+      height: 100%;
+      /* Posicionamiento de la imagen en la pantalla*/
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+}
+
 td{
   white-space: -moz-pre-wrap; /* Firefox */
   white-space: -o-pre-wrap; /* Opera */
@@ -17,16 +28,7 @@ td {
     vertical-align: bottom;
 }
 
-.loginpagebackimage{
-backfround-color: black;
-  	background-image: url("../images/optima.jpg");
-      /*Que ocupe toda la paginat */
-      height: 100%;
-      /* Posicionamiento de la imagen en la pantalla*/
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-}
+
 
 .loingpageformphoto{
   display: flex;
