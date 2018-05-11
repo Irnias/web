@@ -4,16 +4,17 @@
 ?>
 <?php
 $tk = $_GET['TK'];
-if ($tk = "OL") {
-  $fromsearch = "TicketOL"
-  $ticketfieldsearch = "OLTicket"
-} else {
-  $fromsearch = "Tickets"
-}
+// if ($tk = "OL") {
+//   $fromsearch = "TicketOL";
+//   $ticketfieldsearch = "OLTicket";
+// } else {
+//   $fromsearch = "Tickets";
+//   $ticketfieldsearch = "mnTicketNumber";
+// }
  if(($con=odbc_connect("PTTO","",""))=== false )	//Database connect.
    die("connection error");						//Database connect.
 
- $sql="select TOP 1 * from $fromsearch where $ticketfieldsearch like ('%".$tk."%') ORDER BY mnTicketNumber DESC, mnTicketLineNumber DESC" ;						//Sql query.
+ $sql="SELECT TOP 1 * from Tickets where mnTicketNumber like ('%".$tk."%') ORDER BY mnTicketNumber DESC, mnTicketLineNumber DESC" ;						//Sql query.
 
  if(($result=odbc_exec($con,$sql))=== false )		//Run query and validate.
    die("Query error." .odbc_errormsg($sql));		//Run query and validate.
@@ -35,7 +36,7 @@ if ($tk = "OL") {
  if(($con=odbc_connect("PTTO","",""))=== false )	//Database connect.
    die("connection error");						//Database connect.
 
- $sql="select * from WebTickets where mnTicketNumber = $tk";						//Sql query.
+ $sql="SELECT * from Tickets where mnTicketNumber = ".$tk.";";						//Sql query.
 
  if(($result=odbc_exec($con,$sql))=== false )		//Run query and validate.
    die("Query error." .odbc_errormsg($sql));		//Run query and validate.

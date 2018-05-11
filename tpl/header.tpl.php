@@ -17,13 +17,23 @@ else {
 	<link rel="stylesheet" href="css\bootstrap.min.css">
 	<link rel="stylesheet" href="css\style.css">
 
-	<!--ESTAS  LIBRERIAS LA USA PARA LOS GRAFICOS-->
-	<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
-	<script src="js/chartist.min.js"></script>
-	<script src="js/KoolChartLicense.js"></script>
-	<script src="js/KoolIntegration.js"></script>
-	<link rel="stylesheet" href="css/KoolChart.css"/>
-	<!--<link rel="stylesheet" href="https://www.koolchart.com/demo/Samples/Web/sample.css"/> -->
+
+
+<!-- Styles -->
+<style>
+#chartdiv {
+  width: 100%;
+  height: 500px;
+  margin: auto;
+}
+</style>
+
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/gauge.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/none.js"></script>
 
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery-1.11.1.min.js"></script>
@@ -113,7 +123,6 @@ log_ptt();
 		else
 {
 ?>
-
 			<div class="navbar-header">
 				<a class="navbar-brand" href="index.php">Performance Tracking Tool</a>
 			</div>

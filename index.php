@@ -1,5 +1,6 @@
 <?php
-;include ('tpl\header.tpl.php')
+;include ('tpl\header.tpl.php');
+;include ('functions\workingdays.php')
 ?>
 <?php
 if($_SESSION['log'] == 1 )

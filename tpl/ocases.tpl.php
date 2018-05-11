@@ -4,7 +4,7 @@
 	if(($con=odbc_connect("PTTO","",""))=== false )	//Database connect.
 		die("connection error");						//Database connect.
 
-	$sql="select * from WebTickets where szStatus = 'Open' and mnTicketNumber not in (select mnTicketNumber from WebTickets where szStatus = 'close')";//Sql query.
+	$sql="select * from Tickets where szStatus = 'Open' and mnTicketNumber not in (select mnTicketNumber from Tickets where szStatus = 'close')";//Sql query.
 
 	if(($result=odbc_exec($con,$sql))=== false )		//Run query and validate.
 		die("Query error." .odbc_errormsg($sql));		//Run query and validate.
