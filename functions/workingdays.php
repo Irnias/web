@@ -4,7 +4,7 @@ date_default_timezone_set("America/Chicago"); //Set Time zone to CST
 
 function datetimenow(){
     $now = new DateTime();
-    $now->modify('-12 hours');
+    $now-> modify('-12 hours');
     $now = $now->format('Y-m-d H:i:s');
 
     return $now;

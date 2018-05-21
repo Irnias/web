@@ -12,14 +12,7 @@
           <?php
             //PreQuery
               $delayedNtk = "";
-              $prequery_ipdelayed = "SELECT
-              Tickets.mnTicketNumber, 
-              Tickets.gdOpenDate, 
-              Subcategories.mnEstimateWD
-              FROM Subcategories 
-              INNER JOIN Tickets 
-              ON Subcategories.szActivitySubCategory = Tickets.szActivitySubCategory 
-              where szStatus ='Open'";
+              $prequery_ipdelayed = "SELECT Tickets.mnTicketNumber, Tickets.gdOpenDate, Subcategories.mnEstimateWD FROM Subcategories INNER JOIN Tickets ON Subcategories.szActivitySubCategory = Tickets.szActivitySubCategory where szStatus ='Open'";
               if(($result=odbc_exec($con,$prequery_ipdelayed))=== false )		//Run query and validate.
               die("Query error." .odbc_errormsg($prequery_ipdelayed));
               while($row = odbc_fetch_array($result))
@@ -42,13 +35,13 @@
               echo "
                 <table class=\"table primary table-striped table-bordered table-hover\">
                   <tr class=\"danger\">
-                    <th>Ticket</th>
-                    <th>Subject</th>
-                    <th>From</th>
-                    <th>Recived</th>
-                    <th class=\"text-nowrap\">Time Passed</th>
-                    <th>Target</th>
-                    <th class=\"text-nowrap\">Overdue by</th>
+                    <th class=\"text-nowrap\" style=\"font-size:13px\"><center>Ticket</center></th>
+                    <th class=\"text-nowrap\" style=\"font-size:13px\"><center>Subject</center></th>
+                    <th class=\"text-nowrap\" style=\"font-size:13px\"><center>From</center></th>
+                    <th class=\"text-nowrap\" style=\"font-size:13px\"><center>Recived</center></th>
+                    <th class=\"text-nowrap\" style=\"font-size:13px\"><center>Time Passed</center></th>
+                    <th class=\"text-nowrap\" style=\"font-size:13px\"><center>Target</center></th>
+                    <th style=\"font-size:13px\"><center>Overdue</center></th>
                   </tr>";
               while($row = odbc_fetch_array($result))
                 {
@@ -62,100 +55,79 @@
                   $overdue = $TimePassed - $row['mnEstimateWD'];
                   echo "
                   <tr>
-                    <td>TK".$tk."</td>
-                    <td><a href=\"search.php?TK=$tk\">".$row['szDescription']."</a></td>
-                    <td>".$row['szRequestor']."</td>
-                    <td>".$open."</td>
-                    <td>".$a .$HoursPassed." hs</td>
-                    <td>".$Target."</td>
-                    <td><center>".$overdue." WD</center></td>
+                    <td class=\"text-nowrap\" style=\"font-size:11px\" >TK".$tk."</td>
+                    <td class=\"text-nowrap\" style=\"font-size:11px\" ><a href=\"search.php?TK=$tk\">".$row['szDescription']."</a></td>
+                    <td class=\"text-nowrap\" style=\"font-size:11px\" >".$row['szRequestor']."</td>
+                    <td class=\"text-nowrap\" style=\"font-size:11px\" >".$open."</td>
+                    <td class=\"text-nowrap\" style=\"font-size:11px\" >".$a .$HoursPassed." hs</td>
+                    <td class=\"text-nowrap\" style=\"font-size:11px\" >".$Target."</td>
+                    <td class=\"text-nowrap\" style=\"font-size:11px\" ><center>".$overdue." WD</center></td>
                   </tr>";
                 }
                 echo "
                 </table>";
-                odbc_free_result($result);
-                unset($result);
-                odbc_close($con);
+                releasconnection($result,$con);
+
           ?>
-        <h2 class="bg-danger">Unnasigned Delayed</h2>
+        <h2 class="bg-danger">Unnasigned Overdue</h2>
             <?php
-              $prequery = "select mnOLTicket, gdRecived from TicketOL where szTicketTable <> 'Null' and mnTicketLineNumber = 1";
-              $delayedNtk = "";
-              if(($result=odbc_exec($con,$prequery))=== false )		//Run query and validate.
-                  die("Query error." .odbc_errormsg($prequery));
-                  echo "
-                  <table class=\"table primary table-striped table-bordered table-hover\">
-                  <tr class=\"danger\">
-                    <th>Subject</th>
-                    <th>From</th>
-                    <th>Recived</th>
-                    <th class=\"text-nowrap\">Time Passed</th>
-                  </tr>";
-                while($row = odbc_fetch_array($result))
-                {
-                  $open = $row['gdRecived'];
-                  $close = datetimenow();
-                  $TimePassed = number_of_working_days( $open , $close);
-                  $a = ($TimePassed > 0 ? $row['mnOLTicket'].", ": "" );
-                  $delayedNtk = $delayedNtk.$a;
-                }
-                $delayedNtk =trim($delayedNtk, ', ');
-                odbc_free_result($result);
-                unset($result);
-                odbc_close($con);
-            ?>
-            <?php
-                $querytablaOL = "SELECT gdRecived, mnOLTicket, szSubject, szFROM from TicketOL where mnOLTicket in (".$delayedNtk.") order by mnOLTicket desc";
+                $querytablaOL = "SELECT gdReceived, mnOLTicket, szSubject, szFrom FROM TicketOL WHERE mnOLTicket IN (".$delayedNtk_forlist.") order by mnOLTicket desc";
                 $result=odbc_exec($con,$querytablaOL);
                   if(!$result){
                     echo "Query error." .odbc_errormsg($querytablaOL);
                   }
+                  echo "
+                  <table class=\"table primary table-striped table-bordered table-hover\">
+                    <tr class=\"danger\">
+                      <th class=\"text-nowrap\" style=\"font-size:13px\"><center>Subject</center></th>
+                      <th class=\"text-nowrap\" style=\"font-size:13px\"><center>From</center></th>
+                      <th class=\"text-nowrap\" style=\"font-size:13px\"><center>Recived</center></th>
+                      <th class=\"text-nowrap\" style=\"font-size:13px\"><center>Time Passed</center></th>
+                    </tr>";
                 while($row = odbc_fetch_array($result))
                   {
-                    $open = $row['gdRecived'];
+                    $open = $row['gdReceived'];
                     $close = datetimenow();
                     $TimePassed = number_of_working_days($open , $close);
                     echo "  
                     <tr>
-                      <td><a href=\"search.php?OL=".$row['mnOLTicket']."\">".$row['szSubject']."</a></td>
-                      <td>".$row['szFROM']."</td>
-                      <td>".$open."</td>
-                      <td><center>".$TimePassed." wd</center></td>
+                      <td class=\"text-nowrap\" style=\"font-size:11px\"><a href=\"search.php?OL=".$row['mnOLTicket']."\">".$row['szSubject']."</a></td>
+                      <td class=\"text-nowrap\" style=\"font-size:11px\">".$row['szFrom']."</td>
+                      <td class=\"text-nowrap\" style=\"font-size:11px\">".$open."</td>
+                      <td class=\"text-nowrap\" style=\"font-size:11px\"><center>".$TimePassed." wd</center></td>
                     </tr>";
                   }
                 echo "
                 </table>";
-              odbc_free_result($result);
-              unset($result);
-              odbc_close($con);
+                releasconnection($result,$con);
             ?>
       </div>
     </div>
     <div role="tabpanel" class="tab-pane" id="tab2"> <!-- Unnasigned TAB-->
       <?php
-        $querytablaOL = "select * from TicketOL where szTicketTable <> 'Null' and mnTicketLineNumber = 1";
+        $querytablaOL = "select * from TicketOL where szTicketTable = '0' and mnTicketLineNumber = 1";
         if(($result=odbc_exec($con,$querytablaOL))=== false )		//Run query and validate.
           die("Query error." .odbc_errormsg($querytablaOL));		//Run query and validate.
         echo "
         <div class=\"container-fluid\">
           <table class=\"table primary table-striped table-bordered table-hover\">
             <tr class=\"info\">
-              <th>Subject</th>
-              <th>From</th>
-              <th>Recived</th>
-              <th class=\"text-nowrap\">Time Passed</th>
+              <th class=\"text-nowrap\" style=\"font-size:13px\">Subject</th>
+              <th class=\"text-nowrap\" style=\"font-size:13px\">From</th>
+              <th class=\"text-nowrap\" style=\"font-size:13px\">Recived</th>
+              <th class=\"text-nowrap\" style=\"font-size:13px\">Time Passed</th>
             </tr>";
         while($row = odbc_fetch_array($result))
         {
-          $open = $row['gdRecived'];
+          $open = $row['gdReceived'];
           $close = datetimenow();
           $TimePassed = number_of_working_days($open , $close);
-          echo "  
+          echo "
           <tr>
-            <td><a href=\"search.php?OL=".$row['mnOLTicket']."\">".$row['szSubject']."</a></td>
-            <td>".$row['szFROM']."</td>
-            <td>".$open."</td>
-            <td><center>".$TimePassed." wd</center></td>
+            <td class=\"text-nowrap\" style=\"font-size:11px\"><a href=\"search.php?OL=".$row['mnOLTicket']."\">".$row['szSubject']."</a></td>
+            <td class=\"text-nowrap\" style=\"font-size:11px\">".$row['szFROM']."</td>
+            <td class=\"text-nowrap\" style=\"font-size:11px\">".$open."</td>
+            <td class=\"text-nowrap\" style=\"font-size:11px\"><center>".$TimePassed." wd</center></td>
           </tr>";
         }
             echo "</table></div>";
@@ -172,13 +144,13 @@
                     <div class=\"container-fluid\">
                       <table class=\"table primary table-striped table-bordered table-hover\">
                         <tr class=\"info\">
-                          <th>Ticket</th>
-                          <th>Subject</th>
-                          <th>From</th>
-                          <th>Recived</th>
-                          <th>Analyst</th>
-                          <th class=\"text-nowrap\">Time Passed</th>
-                          <th>Target</th>
+                          <th class=\"text-nowrap\" style=\"font-size:13px\">Ticket</th>
+                          <th class=\"text-nowrap\" style=\"font-size:13px\">Subject</th>
+                          <th class=\"text-nowrap\" style=\"font-size:13px\">From</th>
+                          <th class=\"text-nowrap\" style=\"font-size:13px\">Recived</th>
+                          <th class=\"text-nowrap\" style=\"font-size:13px\">Analyst</th>
+                          <th class=\"text-nowrap\" style=\"font-size:13px\">Time Passed</th>
+                          <th class=\"text-nowrap\" style=\"font-size:13px\">Target</th>
                         </tr>";
                 while($row = odbc_fetch_array($result3))
                 {
@@ -191,13 +163,13 @@
                   $Target = $row['szActivitySubCategory'];
                   echo "
                         <tr>
-                          <td>TK".$tk."</td>
-                          <td><a href=\"search.php?TK=$tk\">".$row['szDescription']."</a></td>
-                          <td>".$row['szRequestor']."</td>
-                          <td>".$open."</td>
-                          <td>".$row['szResponsible']."</td>
-                          <td>".$a .$HoursPassed." hs</td>
-                          <td>".$Target."</td>
+                          <td class=\"text-nowrap\" style=\"font-size:11px\">TK".$tk."</td>
+                          <td class=\"text-nowrap\" style=\"font-size:11px\"><a href=\"search.php?TK=$tk\">".$row['szDescription']."</a></td>
+                          <td class=\"text-nowrap\" style=\"font-size:11px\">".$row['szRequestor']."</td>
+                          <td class=\"text-nowrap\" style=\"font-size:11px\">".$open."</td>
+                          <td class=\"text-nowrap\" style=\"font-size:11px\">".$row['szResponsible']."</td>
+                          <td class=\"text-nowrap\" style=\"font-size:11px\">".$a .$HoursPassed." hs</td>
+                          <td class=\"text-nowrap\" style=\"font-size:11px\">".$Target."</td>
                         </tr>";
                 }
                     echo "
@@ -216,13 +188,13 @@
         <div class=\"container-fluid\">
           <table class=\"table primary table-striped table-bordered table-hover\">
             <tr class=\"success\">
-              <th>Subject</th>
-              <th>From</th>
-              <th>Analyst</th>
-              <th>Recived</th>
-              <th class=\"text-nowrap\">Completation date</th>
-              <th>Target</th>
-              <th>Time Passed</th>
+              <th class=\"text-nowrap\" style=\"font-size:13px\">Subject</th>
+              <th class=\"text-nowrap\" style=\"font-size:13px\">From</th>
+              <th class=\"text-nowrap\" style=\"font-size:13px\">Analyst</th>
+              <th class=\"text-nowrap\" style=\"font-size:13px\">Recived</th>
+              <th class=\"text-nowrap\" style=\"font-size:13px\">Completation date</th>
+              <th class=\"text-nowrap\" style=\"font-size:13px\">Target</th>
+              <th class=\"text-nowrap\" style=\"font-size:13px\">Time Passed</th>
             </tr>";
         while($row = odbc_fetch_array($result))
         {
@@ -235,13 +207,13 @@
                   $Target = $row['szActivitySubCategory'];
           echo "
             <tr>
-              <td><a href=\"search.php?TK=$tk\">".$row['szDescription']."</a></td>
-              <td>".$row['szRequestor']."</td>
-              <td>".$row['szResponsible']."</td>
-              <td>".$open."</td>
-              <td >".$close."</td>
-              <td>".$Target."</td>
-              <td>".$a .$HoursPassed." hs</td>
+              <td class=\"text-nowrap\" style=\"font-size:11px\"><a href=\"search.php?TK=$tk\">".$row['szDescription']."</a></td>
+              <td class=\"text-nowrap\" style=\"font-size:11px\">".$row['szRequestor']."</td>
+              <td class=\"text-nowrap\" style=\"font-size:11px\">".$row['szResponsible']."</td>
+              <td class=\"text-nowrap\" style=\"font-size:11px\">".$open."</td>
+              <td class=\"text-nowrap\" style=\"font-size:11px\">".$close."</td>
+              <td class=\"text-nowrap\" style=\"font-size:11px\">".$Target."</td>
+              <td class=\"text-nowrap\" style=\"font-size:11px\">".$a .$HoursPassed." hs</td>
             </tr>";
         }
             echo "</table></div>";

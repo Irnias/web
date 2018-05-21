@@ -33,21 +33,21 @@ if(isset($_POST['submit']))
 			{
 				$_SESSION['log']=1;
 				$_SESSION['webid']=1;
- //GET Name instead user.
-   $sql2= "select * from ACN_Users where szUserID = '".$userID."'";
-   if(($result=odbc_exec($con,$sql2))=== false )		//Run query and validate.
-     die("Query error." .odbc_errormsg($sql2));		//Run query and validate.
-   {
-		 $row = odbc_fetch_array($result);
-		 $analystName = $row['szUsername']; // Get Analyst Name from database
-     $userID = $row['szEmailname']; // Get Analyst ID from database
-		 $analystTeam = $row['szUserTeam']; // Get Analyst Team from database
-		 $_SESSION['logedas']=$userID; //Assign UserID global variable
-		 $_SESSION['aname']=$analystName; //Assign Analist Name global variable
-		 $_SESSION['team']=$analystTeam; //Assign Analist Team global variable
-   }
-   odbc_free_result($result);
-   odbc_close($con);
+ 			//GET Name instead user.
+				$sql2= "select szUsername, szEmailname, szUserTeam from ACN_Users where szUserID = '".$userID."'";
+				if(($result=odbc_exec($con,$sql2))=== false )		//Run query and validate.
+					die("Query error." .odbc_errormsg($sql2));		//Run query and validate.
+				{
+					$row = odbc_fetch_array($result);
+					$analystName = $row['szUsername']; // Get Analyst Name from database
+					$userID = $row['szEmailname']; // Get Analyst ID from database
+					$analystTeam = $row['szUserTeam']; // Get Analyst Team from database
+					$_SESSION['logedas']=$userID; //Assign UserID global variable
+					$_SESSION['aname']=$analystName; //Assign Analist Name global variable
+					$_SESSION['team']=$analystTeam; //Assign Analist Team global variable
+				}
+				odbc_free_result($result);
+				odbc_close($con);
 				header("refresh:0;url=../index.php");
 			}
 			else

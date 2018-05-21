@@ -7,10 +7,11 @@
 			<h2 class="text-center"><font color="white"> Sign in</font></h2>
 			<div style ="text-align:center;">
 				<?php if (isset($_SESSION['jpg'])) { ?>
-				<img src="images/"<?php  echo $_SESSION['jpg']; ?> .jpg" class="img-circle" alt="bio-image" width="200" height="200">
-			<?php } else
+				<img src="images/<?php  echo $_SESSION['jpg']; ?>.jpg" class="img-circle" alt="bio-image" width="200" height="200">
+			<?php
+			 } else
 			{ ?>
-				<img src="images/default.png" class="img-circle" style="background-color: #FFFFFF;"  alt="bio-image" width="200" height="200">
+				<img src="images/default.png" class="img-circle" style="background-color:#FFFFFF;"  alt="bio-image" width="200" height="200">
 			<?php } ?>
 			</div>
 	</br>

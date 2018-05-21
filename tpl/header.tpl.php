@@ -16,9 +16,6 @@ else {
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="css\bootstrap.min.css">
 	<link rel="stylesheet" href="css\style.css">
-
-
-
 <!-- Styles -->
 <style>
 #chartdiv {
@@ -27,18 +24,16 @@ else {
   margin: auto;
 }
 </style>
-
 <!-- Resources -->
 <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
 <script src="https://www.amcharts.com/lib/3/gauge.js"></script>
 <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
-<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all"/>
 <script src="https://www.amcharts.com/lib/3/themes/none.js"></script>
-
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery-1.11.1.min.js"></script>
 
-<title>Performance Tracking Tool Online</title>
+  <title>Workload Organizer Tool Online</title>
 
 </head>
 <?php
@@ -79,7 +74,7 @@ log_ptt();
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="cases/main.php">PTT Online</a>
+            <a class="navbar-brand" href="cases/main.php">WOT Online</a>
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
@@ -114,6 +109,7 @@ log_ptt();
             <li class=<?php if($_SESSION['webid']==6){ echo "\"active\""; }?>><a href="cases/myocases.php">My Open cases</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="functions/logout.php">Log out</a></li>
+            <!--<li><a href="cases/changepw.php">Change Password</a></li>-->
           </ul>
         </li>
       </ul>
@@ -124,12 +120,11 @@ log_ptt();
 {
 ?>
 			<div class="navbar-header">
-				<a class="navbar-brand" href="index.php">Performance Tracking Tool</a>
+            <a class="navbar-brand" href="index.php">Workload Organizer Tool</a>
 			</div>
 <?php
 }
 }
-
 ?>
   </div>
 </nav>
