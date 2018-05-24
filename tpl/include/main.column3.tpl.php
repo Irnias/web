@@ -1,9 +1,30 @@
 <div role ="tabpanel">
   <ul class="nav nav-tabs" role="tablist">
-      <li role"presentation" class="active"><a href="#tab1" aria-controls="tab1" data-toggle="tab" role="tab">Delayed</a></li>
-      <li role"presentation"><a href="#tab2" aria-controls="tab2" data-toggle="tab" role="tab">Unassigned</a></li>
-      <li role"presentation"><a href="#tab3" aria-controls="tab3" data-toggle="tab" role="tab">In progress</a></li>
-      <li role"presentation"><a href="#tab4" aria-controls="tab4" data-toggle="tab" role="tab">Completed</a></li>
+    <li role"presentation" class="active">
+      <a href="#tab1" aria-controls="tab1" data-toggle="tab" role="tab" class="text-nowrap">Delayed
+        <span class="badge">
+          <?php echo $totun ; ?>
+        </span>
+      </a>
+    </li>
+    <li role"presentation">
+      <a href="#tab2" aria-controls="tab2" data-toggle="tab" role="tab">Unassigned
+        <span class="badge">
+          <?php echo $total_unnasigned;?>
+        </span>
+      </a>
+    </li>
+    <li role"presentation">
+      <a href="#tab3" aria-controls="tab3" data-toggle="tab" role="tab">In progress
+        <span class="badge">
+          <?php echo $totalIP; ?>
+        </span>
+      </a>
+    </li>
+    <li role"presentation">
+      <a href="#tab4" aria-controls="tab4" data-toggle="tab" role="tab">Completed
+      </a>
+    </li>
   </ul>
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="tab1"> <!--Delayed TAB-->
