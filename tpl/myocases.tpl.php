@@ -4,13 +4,13 @@
 	if(($con=odbc_connect("PTTO","",""))=== false )	//Database connect.
 		die("connection error");						//Database connect.
 
-	$sql="select * from Tickets where szStatus = 'Open' and  szResponsible = '".$_SESSION['logedas']."'";						//Sql query.
+	$sql="select * from Tickets where szStatus = 'Open' and  szResponsible = '".$_SESSION['aname']."'";						//Sql query.
 
 	if(($result=odbc_exec($con,$sql))=== false )		//Run query and validate.
 		die("Query error." .odbc_errormsg($sql));		//Run query and validate.
 
   echo"<div class=\"container\">
-  <h1>Open Cases <small> MIS </small></h1>
+  <h1>Open Cases <small>  </small></h1>
 </div>";
 
 echo "<div class=\"container\"><table class=\"table primary table-striped table-bordered table-hover\"><tr><th>TicketNumber</th><th>Team</th><th>Status</th><th>Requestor</th><th>Description</th><th>Analyst</th><th class=\"text-nowrap\" >More info</th></tr>";

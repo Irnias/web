@@ -17,12 +17,15 @@
     <li role"presentation">
       <a href="#tab3" aria-controls="tab3" data-toggle="tab" role="tab">In progress
         <span class="badge">
-          <?php echo $totalIP; ?>
+          <?php echo $totalIPo; ?>
         </span>
       </a>
     </li>
     <li role"presentation">
       <a href="#tab4" aria-controls="tab4" data-toggle="tab" role="tab">Completed
+      <span class="badge">
+          <?php echo $total_Completed; ?>
+        </span>
       </a>
     </li>
   </ul>
@@ -31,26 +34,9 @@
       <div class="container-fluid">
         <h2 class="bg-danger">In Progress Overdue</h2>
           <?php
-            //PreQuery
-              $delayedNtk = "";
-              $prequery_ipdelayed = "SELECT Tickets.mnTicketNumber, Tickets.gdOpenDate, Subcategories.mnEstimateWD FROM Subcategories INNER JOIN Tickets ON Subcategories.szActivitySubCategory = Tickets.szActivitySubCategory where szStatus ='Open'";
-              if(($result=odbc_exec($con,$prequery_ipdelayed))=== false )		//Run query and validate.
-              die("Query error." .odbc_errormsg($prequery_ipdelayed));
-              while($row = odbc_fetch_array($result))
-                  {
-                    $open = $row['gdOpenDate'];
-                    $close = datetimenow();
-                    $TimePassed = number_of_working_days( $open , $close);
-                    $a = ($TimePassed > $row['mnEstimateWD'] ? $row['mnTicketNumber'].", ": "" );
-                    $delayedNtk = $delayedNtk.$a;
-                  }
-                  $delayedNtk = $delayedNtk.$a;
-                  $delayedNtk =trim($delayedNtk, ', ');
-                  odbc_free_result($result);
-                  unset($result);
-                  odbc_close($con);
             //Query  
-              $querytablaOL = "SELECT *, Subcategories.mnEstimateWD from (Subcategories INNER JOIN Tickets ON Subcategories.szActivitySubCategory = Tickets.szActivitySubCategory) WHERE mnTicketLineNumber = 1 AND mnTicketNumber in (".$delayedNtk.")";
+              $querytablaOL = "SELECT *, Subcategories.mnEstimateWD from (Subcategories INNER JOIN Tickets ON Subcategories.szActivitySubCategory = Tickets.szActivitySubCategory) WHERE mnTicketLineNumber = 1 AND mnTicketNumber in (".$delayedNtk2.")";
+              // echo "Query IP OVerdue: ".$querytablaOL."<br>";
               if(($result=odbc_exec($con,$querytablaOL))=== false )		//Run query and validate.
               die("Query error." .odbc_errormsg($querytablaOL));		//Run query and validate.
               echo "
@@ -92,7 +78,7 @@
           ?>
         <h2 class="bg-danger">Unnasigned Overdue</h2>
             <?php
-                $querytablaOL = "SELECT gdReceived, mnOLTicket, szSubject, szFrom FROM TicketOL WHERE mnOLTicket IN (".$delayedNtk_forlist.") order by mnOLTicket desc";
+                $querytablaOL = "SELECT gdReceived, mnOLTicket, szSubject, szFrom FROM TicketsOL WHERE mnOLTicket IN (".$delayedNtk_forlist.") order by mnOLTicket desc";
                 $result=odbc_exec($con,$querytablaOL);
                   if(!$result){
                     echo "Query error." .odbc_errormsg($querytablaOL);
@@ -126,7 +112,7 @@
     </div>
     <div role="tabpanel" class="tab-pane" id="tab2"> <!-- Unnasigned TAB-->
       <?php
-        $querytablaOL = "select * from TicketOL where szTicketTable = '0' and mnTicketLineNumber = 1";
+        $querytablaOL = "select * from TicketsOL where szTicketTable = '0' and mnTicketLineNumber = 1";
         if(($result=odbc_exec($con,$querytablaOL))=== false )		//Run query and validate.
           die("Query error." .odbc_errormsg($querytablaOL));		//Run query and validate.
         echo "
@@ -158,7 +144,7 @@
     </div>
     <div role="tabpanel" class="tab-pane" id="tab3">  <!--In progress TAB-->
               <?php
-                $querytablatk = "select * from Tickets where szStatus = 'Open' order by mnTicketNumber desc ";
+                $querytablatk = "SELECT * FROM Tickets WHERE szStatus = 'Open' order by mnTicketNumber desc ";
                 if(($result3=odbc_exec($con,$querytablatk))=== false )		//Run query and validate.
                   die("Query error." .odbc_errormsg($querytablatk));		//Run query and validate.
                   echo "
@@ -202,7 +188,7 @@
     </div>
     <div role="tabpanel" class="tab-pane" id="tab4"> <!--Completed TAB -->
       <?php
-        $querytablaOL = "select * from Tickets where szStatus= 'closed'";
+        $querytablaOL = "select * from Tickets where szStatus= 'closed' and mnTicketLinenumber = 1 ";
         if(($result=odbc_exec($con,$querytablaOL))=== false )		//Run query and validate.
           die("Query error." .odbc_errormsg($querytablaOL));		//Run query and validate.
         echo "

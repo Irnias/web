@@ -9,4 +9,14 @@ function releasconnection($result,$con){
     return 0;
 }
 
+function canntdividebyzero($var){
+    $value = $var;
+    if ($value == 0){
+        $value = 1;
+    }
+    return$value;
+
+}
+
+
 ?>

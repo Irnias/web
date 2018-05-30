@@ -57,7 +57,7 @@
             "radius": "40%",
             "innerRadius": "25%"
           }, {
-            "color": "#1cb0b0",
+            "color": "#8aafc1",
             "startValue": 0,
             "endValue": <?php echo $un_porcentaje; ?>,
             "radius": "40%",
