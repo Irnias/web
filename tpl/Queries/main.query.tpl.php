@@ -50,7 +50,7 @@ Test V1
        }
        releasconnection($result,$con);
     //TestV1-OK--//Busca cantidad total de unnasigned aplicando filtro de usuario.
-      $uncountquery = "SELECT count(szCID) AS resultado FROM TicketsOL WHERE szTeam in ($userteams) and mnTicketLineNumber = 1 and szTicketTable = '0'" ;
+      $uncountquery = "SELECT count(szTeam) AS resultado FROM TicketsOL WHERE szTeam in ($userteams) and mnTicketLineNumber = 1 and szTicketTable = '0'" ;
       $result = odbc_exec($con,$uncountquery);
       if(!$result){
         echo "<center>Error detected:Query <b>".$uncountquery."</b>did not work.<br>Please contact the administrator</center><br>".odbc_errormsg($uncountquery);
@@ -60,7 +60,7 @@ Test V1
       }
       releasconnection($result,$con);
     //TestV1-OK--//Busca la cantidad total de tickets en la tabla OL aplicando filtro de usuario.
-      $OLquery = "SELECT count(szCID) AS resultado FROM TicketsOL WHERE szTeam in ($userteams) and mnTicketLineNumber = 1";
+      $OLquery = "SELECT count(szTeam) AS resultado FROM TicketsOL WHERE szTeam in ($userteams) and mnTicketLineNumber = 1";
       $result = odbc_exec($con,$OLquery);
       if(!$result){
         echo "<center>Error detected:Query <b>".$OLquery."</b>did not work.<br>Please contact the administrator</center><br>".odbc_errormsg($OLquery);
@@ -69,11 +69,6 @@ Test V1
         $total_OL = $row['resultado'];
       }
       releasconnection($result,$con);
-    //TestV1-OK--//Calculo del procentaje
-      $un_porcentaje =round((($total_unnasigned / canntdividebyzero($total_OL)) * 100),1);// % total de unnasigned
-      //echo "Total Unnasigned: ".$total_unnasigned."<br>";
-      // echo "Total OL: ".$total_OL."<br>";
-      //echo "Porcentaje de UN: ". $un_porcentaje."<br>";
   }else{
     echo "<center>Error detected: Team is not declared.<br>Please contact the administrator</center>";
   }
@@ -82,10 +77,9 @@ Test V1
 //TestV1-OK--//*****IP overdue *****/////
   //TestV1-OK--//Busca los numeros de TK con delay para usarlos en la siguiente query.
     $delayedNtk2 = "";
-    $prequery_ipdelayed = "SELECT 
-    Tickets.mnTicketNumber, Tickets.gdOpenDate, Subcategories.mnEstimateWD FROM Subcategories INNER JOIN Tickets ON Subcategories.szActivitySubCategory = Tickets.szActivitySubCategory WHERE szStatus ='Open' AND Tickets.szTeam in ($userteams)";
+    $prequery_ipdelayed = "SELECT Tickets.mnTicketNumber, Tickets.gdOpenDate, Subcategories.mnEstimateWD from (Subcategories INNER JOIN Tickets ON Subcategories.ConcatSA = Tickets.ConcatTK) WHERE Tickets.szStatus ='Open' AND Tickets.szTeam in ($userteams)";
     $result = odbc_exec($con,$prequery_ipdelayed);
-    // echo "Query: ".$prequery_ipdelayed."<br>";
+     //echo "Query: ".$prequery_ipdelayed."<br>";
     if(!$result){
       echo "<center>Error detected:Query <b>".$prequery_ipdelayed."</b>did not work.<br>Please contact the administrator</center><br>".odbc_errormsg($prequery_ipdelayed);
     }else{
@@ -143,9 +137,11 @@ Test V1
     // echo "total IP Open ".$totalIPo."<br>";
     //echo "cantoipoverdue ".$totalopeoverdue."<br>";
   //TestV1-OK--//Calculo de porcentaje de In progress con delay
-    $cantoipoverdue = round(100 - (($totalopeoverdue / canntdividebyzero($totalIP)) * 100),1);// % total de Inprogress Overdue
+    $cantoipoverdue = round((($totalopeoverdue / canntdividebyzero($totalIP)) * 100),1);// % total de Inprogress Overdue
     //echo "cantoipoverdue ".$totalopeoverdue."<br>";
     //echo "Test OK IP overdue %";
+
+    
 //TestV1-OK--/////*****UN overdue *****/////
   //TestV1-OK--//Query para obtener los mnOLticket con delay(lista de tk y cantidad).
     $oloverduelist = "SELECT mnOLTicket, gdReceived from TicketsOL where szTicketTable = '0' and mnTicketLineNumber = 1";
@@ -170,9 +166,7 @@ Test V1
       //echo "Suma de unnasigned con delay: ".$items."<br>";
     }
   //TestV1-OK--//Calculo de procentaje de UN Delayed
-    $un_overdueporcentaje =round((($cantidadUNoverdue / canntdividebyzero($total_OL)) * 100),1);// % total de unnasigned overdue
-
-
+    $un_overdueporcentaje =round((($cantidadUNoverdue / canntdividebyzero($total_unnasigned)) * 100),1);// % total de unnasigned overdue
 //TestV1-OK--/////*****Delayed %  *****/////
   $totun = $cantidadUNoverdue+$totalopeoverdue;
   $tottot = $totalIP + $total_OL;
@@ -187,7 +181,7 @@ Test V1
   // echo "totun / tottot = ".$Totaloverdue."<br>";
 //TestV1-OK--//////*****Total completed */
   //echo "Team Optiom test: " . $teamoption."<br>";
-  $totalCompleted = "SELECT count(szConversationID) AS resultado FROM Tickets WHERE szTeam = '$teamoption' and mnTicketLineNumber =1 AND szStatus = 'Closed'";
+  $totalCompleted = "SELECT count(szTeam) AS resultado FROM Tickets WHERE szTeam = '$teamoption' and mnTicketLineNumber =1 AND szStatus = 'Closed'";
   $result = odbc_exec($con,$totalCompleted);
   if(!$result){
     echo "<center>Error detected:Query <b>".$totalCompleted."</b>did not work.<br>Please contact the administrator</center><br>".odbc_errormsg($totalCompleted);
@@ -196,4 +190,10 @@ Test V1
     $total_Completed = $row['resultado'];
   }
   releasconnection($result,$con);
+  
+//TestV1-OK--//Calculo del procentaje
+$un_porcentaje =round((($total_unnasigned / canntdividebyzero($total_unnasigned+$totalIP+$total_Completed)) * 100),1);// % total de unnasigned
+//echo "Total Unnasigned: ".$total_unnasigned."<br>";
+// echo "Total OL: ".$total_OL."<br>";
+//echo "Porcentaje de UN: ". $un_porcentaje."<br>";
 ?>

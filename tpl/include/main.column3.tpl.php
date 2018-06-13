@@ -35,8 +35,8 @@
         <h2 class="bg-danger">In Progress Overdue</h2>
           <?php
             //Query  
-              $querytablaOL = "SELECT *, Subcategories.mnEstimateWD from (Subcategories INNER JOIN Tickets ON Subcategories.szActivitySubCategory = Tickets.szActivitySubCategory) WHERE mnTicketLineNumber = 1 AND mnTicketNumber in (".$delayedNtk2.")";
-              // echo "Query IP OVerdue: ".$querytablaOL."<br>";
+              $querytablaOL = "SELECT Tickets.*, Subcategories.mnEstimateWD from (Subcategories INNER JOIN Tickets ON Subcategories.ConcatSA = Tickets.ConcatTK) WHERE mnTicketLineNumber = 1 ".($delayedNtk2 == "" ? "": "AND mnTicketNumber IN ($delayedNtk2)" );
+              //echo "TEST Query IP OVerdue: ".$querytablaOL."<br>";
               if(($result=odbc_exec($con,$querytablaOL))=== false )		//Run query and validate.
               die("Query error." .odbc_errormsg($querytablaOL));		//Run query and validate.
               echo "
@@ -46,6 +46,7 @@
                     <th class=\"text-nowrap\" style=\"font-size:13px\"><center>Subject</center></th>
                     <th class=\"text-nowrap\" style=\"font-size:13px\"><center>From</center></th>
                     <th class=\"text-nowrap\" style=\"font-size:13px\"><center>Recived</center></th>
+                    <th class=\"text-nowrap\" style=\"font-size:13px\"><center>Analyst</center></th>
                     <th class=\"text-nowrap\" style=\"font-size:13px\"><center>Time Passed</center></th>
                     <th class=\"text-nowrap\" style=\"font-size:13px\"><center>Target</center></th>
                     <th style=\"font-size:13px\"><center>Overdue</center></th>
@@ -55,20 +56,23 @@
                   $tk = $row['mnTicketNumber'];
                   $open = $row['gdOpenDate'];
                   $close = datetimenow();
-                  $TimePassed = number_of_working_days( $open , $close);
+                  $TimePassed = number_of_working_days( $open ,  $close);
                   $a = ($TimePassed > 0 ? $TimePassed." wd ": "" );
-                  $HoursPassed = hours_of_working_days( $open , $close);
+                  $HoursPassed = ((hours_of_working_days( $open , $close)) > 0 ? (hours_of_working_days( $open , $close))." hs":"");
                   $Target = $row['szActivitySubCategory'];
-                  $overdue = $TimePassed - $row['mnEstimateWD'];
+                  $targetTime = (is_numeric($Target) ? $Target : $row['mnEstimateWD']);
+                  $overdue = ($TimePassed - $targetTime > 0 ? $TimePassed - $targetTime." wd ": "" );
+                  $subject = $row['szDescription'];
                   echo "
                   <tr>
                     <td class=\"text-nowrap\" style=\"font-size:11px\" >TK".$tk."</td>
-                    <td class=\"text-nowrap\" style=\"font-size:11px\" ><a href=\"search.php?TK=$tk\">".$row['szDescription']."</a></td>
-                    <td class=\"text-nowrap\" style=\"font-size:11px\" >".$row['szRequestor']."</td>
+                    <td class=\"text-nowrap\" style=\"font-size:11px\" title=\"$subject\"><a href=\"search.php?TK=$tk\">".mb_strimwidth($subject, 0, 45, '...')."</a></td>
+                    <td class=\"text-nowrap\" style=\"font-size:11px\" >".$close.$row['szRequestor']."</td>
                     <td class=\"text-nowrap\" style=\"font-size:11px\" >".$open."</td>
+                    <td class=\"text-nowrap\" style=\"font-size:11px\" >".$row['szResponsible']."</td>
                     <td class=\"text-nowrap\" style=\"font-size:11px\" >".$a .$HoursPassed." hs</td>
                     <td class=\"text-nowrap\" style=\"font-size:11px\" >".$Target."</td>
-                    <td class=\"text-nowrap\" style=\"font-size:11px\" ><center>".$overdue." WD</center></td>
+                    <td class=\"text-nowrap\" style=\"font-size:11px\" ><center>".$overdue.$HoursPassed."</center></td>
                   </tr>";
                 }
                 echo "
@@ -96,9 +100,10 @@
                     $open = $row['gdReceived'];
                     $close = datetimenow();
                     $TimePassed = number_of_working_days($open , $close);
+                    $subject = $row['szSubject'];
                     echo "  
                     <tr>
-                      <td class=\"text-nowrap\" style=\"font-size:11px\"><a href=\"search.php?OL=".$row['mnOLTicket']."\">".$row['szSubject']."</a></td>
+                      <td class=\"text-nowrap\" style=\"font-size:11px\"><a href=\"search.php?OL=".$row['mnOLTicket']."\" title=\"$subject\">".mb_strimwidth($subject, 0, 45, '...')."</a></td>
                       <td class=\"text-nowrap\" style=\"font-size:11px\">".$row['szFrom']."</td>
                       <td class=\"text-nowrap\" style=\"font-size:11px\">".$open."</td>
                       <td class=\"text-nowrap\" style=\"font-size:11px\"><center>".$TimePassed." wd</center></td>
@@ -129,9 +134,10 @@
           $open = $row['gdReceived'];
           $close = datetimenow();
           $TimePassed = number_of_working_days($open , $close);
+          $subject = $row['szSubject'];
           echo "
           <tr>
-            <td class=\"text-nowrap\" style=\"font-size:11px\"><a href=\"search.php?OL=".$row['mnOLTicket']."\">".$row['szSubject']."</a></td>
+            <td class=\"text-nowrap\" style=\"font-size:11px\"><a href=\"search.php?OL=".$row['mnOLTicket']."\" title=\"$subject\" >".mb_strimwidth($subject, 0, 45, '...')."</a></td>
             <td class=\"text-nowrap\" style=\"font-size:11px\">".$row['szFROM']."</td>
             <td class=\"text-nowrap\" style=\"font-size:11px\">".$open."</td>
             <td class=\"text-nowrap\" style=\"font-size:11px\"><center>".$TimePassed." wd</center></td>
@@ -144,7 +150,7 @@
     </div>
     <div role="tabpanel" class="tab-pane" id="tab3">  <!--In progress TAB-->
               <?php
-                $querytablatk = "SELECT * FROM Tickets WHERE szStatus = 'Open' order by mnTicketNumber desc ";
+                $querytablatk = "SELECT * FROM Tickets WHERE szStatus = 'Open'AND mnTicketLineNumber = 1 order by mnTicketNumber desc";
                 if(($result3=odbc_exec($con,$querytablatk))=== false )		//Run query and validate.
                   die("Query error." .odbc_errormsg($querytablatk));		//Run query and validate.
                   echo "
@@ -168,10 +174,11 @@
                   $a = ($TimePassed > 0 ? $TimePassed." wd ": "" );
                   $HoursPassed = hours_of_working_days( $open , $close);
                   $Target = $row['szActivitySubCategory'];
+                  $subject =$row['szDescription'];
                   echo "
                         <tr>
                           <td class=\"text-nowrap\" style=\"font-size:11px\">TK".$tk."</td>
-                          <td class=\"text-nowrap\" style=\"font-size:11px\"><a href=\"search.php?TK=$tk\">".$row['szDescription']."</a></td>
+                          <td class=\"text-nowrap\" style=\"font-size:11px\" title=\"$subject\"><a href=\"search.php?TK=$tk\">".mb_strimwidth($subject, 0, 45, '...')."</a></td>
                           <td class=\"text-nowrap\" style=\"font-size:11px\">".$row['szRequestor']."</td>
                           <td class=\"text-nowrap\" style=\"font-size:11px\">".$open."</td>
                           <td class=\"text-nowrap\" style=\"font-size:11px\">".$row['szResponsible']."</td>
@@ -195,10 +202,11 @@
         <div class=\"container-fluid\">
           <table class=\"table primary table-striped table-bordered table-hover\">
             <tr class=\"success\">
+              <th class=\"text-nowrap\" style=\"font-size:13px\">Ticket</th>
               <th class=\"text-nowrap\" style=\"font-size:13px\">Subject</th>
               <th class=\"text-nowrap\" style=\"font-size:13px\">From</th>
-              <th class=\"text-nowrap\" style=\"font-size:13px\">Analyst</th>
               <th class=\"text-nowrap\" style=\"font-size:13px\">Recived</th>
+              <th class=\"text-nowrap\" style=\"font-size:13px\">Analyst</th>
               <th class=\"text-nowrap\" style=\"font-size:13px\">Completation date</th>
               <th class=\"text-nowrap\" style=\"font-size:13px\">Target</th>
               <th class=\"text-nowrap\" style=\"font-size:13px\">Time Passed</th>
@@ -212,12 +220,14 @@
                   $a = ($TimePassed > 0 ? $TimePassed." wd ": "" );
                   $HoursPassed = hours_of_working_days( $open , $close);
                   $Target = $row['szActivitySubCategory'];
+                  $subject = $row['szDescription'];
           echo "
             <tr>
-              <td class=\"text-nowrap\" style=\"font-size:11px\"><a href=\"search.php?TK=$tk\">".$row['szDescription']."</a></td>
+              <td class=\"text-nowrap\" style=\"font-size:11px\">TK".$tk."</td>
+              <td class=\"text-nowrap\" style=\"font-size:11px\"><a href=\"search.php?TK=$tk\" title=\"$subject\">".mb_strimwidth($subject, 0, 45, '...')."</a></td>
               <td class=\"text-nowrap\" style=\"font-size:11px\">".$row['szRequestor']."</td>
-              <td class=\"text-nowrap\" style=\"font-size:11px\">".$row['szResponsible']."</td>
               <td class=\"text-nowrap\" style=\"font-size:11px\">".$open."</td>
+              <td class=\"text-nowrap\" style=\"font-size:11px\">".$row['szResponsible']."</td>
               <td class=\"text-nowrap\" style=\"font-size:11px\">".$close."</td>
               <td class=\"text-nowrap\" style=\"font-size:11px\">".$Target."</td>
               <td class=\"text-nowrap\" style=\"font-size:11px\">".$a .$HoursPassed." hs</td>

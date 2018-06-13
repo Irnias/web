@@ -23,7 +23,7 @@
             "endValue": <?php echo $Totaloverdue; ?>,
             "radius": "100%",
             "innerRadius": "85%",
-            "balloonText": "<?php echo $Totaloverdue."% Overdue"; ?>"
+            "balloonText": "Delayed <b><?php echo $totun." (".$Totaloverdue."%)</b>"; ?>"
           }, {
             "color": "#eee",
             "startValue": 0,
@@ -36,7 +36,7 @@
             "endValue": <?php echo $un_overdueporcentaje; ?>,
             "radius": "80%",
             "innerRadius": "65%",
-            "balloonText": "<?php echo $un_overdueporcentaje."% UN Overdue"; ?>"
+            "balloonText": "UN Overdue <b><?php echo $cantidadUNoverdue." (".$un_overdueporcentaje."%)</b>"; ?>"
           }, {
             "color": "#eee",
             "startValue": 0,
@@ -49,7 +49,7 @@
             "endValue": <?php echo $cantoipoverdue; ?>,
             "radius": "60%",
             "innerRadius": "45%",
-            "balloonText": "<?php echo $cantoipoverdue."% IP Overdue"; ?>"
+            "balloonText": "IP Overdue <b><?php echo $totalopeoverdue. " (".$cantoipoverdue."%)<b>"; ?>"
           }, {
             "color": "#eee",
             "startValue": 0,
@@ -62,36 +62,36 @@
             "endValue": <?php echo $un_porcentaje; ?>,
             "radius": "40%",
             "innerRadius": "25%",
-            "balloonText": "<?php echo $un_porcentaje."% Unassigned"; ?>"
+            "balloonText": "Unassigned <b><?php echo $total_unnasigned." (".$un_porcentaje."%)<b>"; ?>"
           }]
         }],
         "allLabels": [{
-          "text": "Delayed %",
-          "x": "49%",
+          "text": "Delayed",
+          "x": "40%",
           "y": "76%",
           "size": 14,
           "bold": true,
           "color": "#5587a2",
           "align": "right"
         }, {
-          "text": "UN Overdue %",
-          "x": "49%",
+          "text": "UN Overdue",
+          "x": "40%",
           "y": "70%",
           "size": 14,
           "bold": true,
           "color": "#f76e6e",
           "align": "right"
         }, {
-          "text": "IP Overdue %",
-          "x": "49%",
+          "text": "IP Overdue",
+          "x": "40%",
           "y": "64%",
           "size": 14,
           "bold": true,
           "color": "#f6a54c",
           "align": "right"
         }, {
-          "text": "Unassigned %",
-          "x": "49%",
+          "text": "Unassigned",
+          "x": "40%",
           "y": "58%",
           "size": 14,
           "bold": true,
@@ -104,4 +104,4 @@
       });
       </script>
       <!-- HTML -->
-      <div id="chartdiv"></div>
+      <div id="chartdiv" style="max-height: 200px; max-width: 400px;"></div>

@@ -17,7 +17,7 @@ function number_of_working_days($from, $to) {
 
     $from = new DateTime($from);
     $to = new DateTime($to);
-    $to->modify('+1 day');
+    //$to->modify('+1 day');
     $interval = new DateInterval('P1D');
     $periods = new DatePeriod($from, $interval, $to);
 

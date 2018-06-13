@@ -101,10 +101,11 @@ log_ptt();
       </form>
       <ul class="nav navbar-nav navbar-right">
         <!-- <li><a href="#">Link</a></li> -->
+        <li></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <?php echo $_SESSION['logedas']; ?>  <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li class=<?php if($_SESSION['webid']==5){ echo "\"active\""; }?>><a href="cases/allcases.php">All cases</a></li>
+            <!--<li class=<?php if($_SESSION['webid']==5){ echo "\"active\""; }?>><a href="cases/allcases.php">All cases</a></li>-->
 						<li class=<?php if($_SESSION['webid']==2){ echo "\"active\""; }?>><a href="cases/mycases.php" >My cases</a></li>
             <li class=<?php if($_SESSION['webid']==6){ echo "\"active\""; }?>><a href="cases/myocases.php">My Open cases</a></li>
             <li role="separator" class="divider"></li>

@@ -1,9 +1,17 @@
 <?php
   include ('tpl\Queries\main.query.tpl.php')
 ?>
-<div class="container-fluid"> <br> Welcome <?php echo $_SESSION['aname']; ?></div><br><br><br>
-<div class="container-fluid">
-  <div class="container col-xs-1">
+<div class="container-fluid"> <br> Welcome <?php echo $_SESSION['aname']; ?></div><br>
+<div class="container-fluid" style="max-height: 250;">
+  <div class="clearfix visible-xs-block"></div>
+  <div class="container col-xs-3">
+    <?php
+    include ('tpl\include\main.column2.tpl.php')
+    ?>
+  </div>
+  <div class="container col-xs-3"></div>
+  <div class="container col-xs-3"></div>
+  <div class="container col-xs-3">
     <center>Filters</center>
     <div role="tabpanel">
       <ul class="nav nav-pills nav-stacked">
@@ -14,17 +22,16 @@
       </ul>
     </div>
   </div>
-  <div class="clearfix visible-xs-block"></div>
-  <div class="container col-xs-3">
-    <?php
-    include ('tpl\include\main.column2.tpl.php')
-    ?>
-  </div>
-  <div class="clearfix visible-xs-block"></div>
-    <div class="container col-xs-8">
-    <?php
-    include ('tpl\include\main.column3.tpl.php')
-    ?>
 </div>
+  <div class="container-fluid">
+    <div class="clearfix visible-xs-block"></div>
+      <div class="clearfix visible-xs-block"></div>
+        <div class="container col-xs-12">
+          <?php
+          include ('tpl\include\main.column3.tpl.php')
+          ?>
+        </div>
+  </div>
+    
 </body>
 <br><br><br><br><br>
